@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Focus Mood Timer</title>
+<style>
+  :root{
+    --bg:#0f172a;--card:#111827;--accent:#38bdf8;--text:#e5e7eb;--good:#22c55e;--warn:#f59e0b;--bad:#ef4444;
+  }
+  body{margin:0;font-family:system-ui,Segoe UI,Roboto;background:linear-gradient(135deg,#020617,#0f172a);color:var(--text);display:flex;align-items:center;justify-content:center;height:100vh}
+  .card{background:var(--card);padding:30px;border-radius:22px;box-shadow:0 20px 60px rgba(0,0,0,.5);width:340px;text-align:center}
+  h1{margin:0 0 10px;font-size:26px}
+  .timer{font-size:52px;font-weight:700;margin:15px 0}
+  button{border:none;border-radius:12px;padding:10px 16px;margin:6px;font-weight:600;cursor:pointer}
+  .start{background:var(--good)}
+  .pause{background:var(--warn)}
+  .reset{background:var(--bad)}
+  .moods{margin-top:15px}
+  .moods button{background:#1f2937;color:#fff}
+  footer{margin-top:12px;font-size:12px;opacity:.6}
+</style>
+</head>
+<body>
+<div class="card">
+  <h1>🎧 Focus Mood</h1>
+  <div id="status">Ready to focus</div>
+  <div class="timer" id="timer">25:00</div>
+  <div>
+    <button class="start" onclick="startTimer()">Start</button>
+    <button class="pause" onclick="pauseTimer()">Pause</button>
+    <button class="reset" onclick="resetTimer()">Reset</button>
+  </div>
+  <div class="moods">
+    <p>Choose mood theme:</p>
+    <button onclick="setMood('focus')">Focus</button>
+    <button onclick="setMood('calm')">Calm</button>
+    <button onclick="setMood('night')">Night</button>
+  </div>
+  <footer>Mini productivity website</footer>
+</div>
+<script>
+let time=1500;let timer=null;let running=false;
+function update(){
+  const m=Math.floor(time/60).toString().padStart(2,'0');
+  const s=(time%60).toString().padStart(2,'0');
+  document.getElementById('timer').textContent=`${m}:${s}`;
+}
+function startTimer(){
+  if(running)return;running=true;document.getElementById('status').textContent='Working...';
+  timer=setInterval(()=>{time--;update();if(time<=0){clearInterval(timer);document.getElementById('status').textContent='Break time 🎉';running=false}},1000);
+}
+function pauseTimer(){clearInterval(timer);running=false;document.getElementById('status').textContent='Paused';}
+function resetTimer(){clearInterval(timer);time=1500;running=false;update();document.getElementById('status').textContent='Reset complete';}
+function setMood(type){
+  if(type==='focus'){document.body.style.background='linear-gradient(135deg,#020617,#0f172a)'}
+  if(type==='calm'){document.body.style.background='linear-gradient(135deg,#022c22,#065f46)'}
+  if(type==='night'){document.body.style.background='linear-gradient(135deg,#020617,#312e81)'}
+}
+update();
+</script>
+</body>
+</html>
